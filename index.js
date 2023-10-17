@@ -8,6 +8,9 @@ morgan.token("body", (req) => {
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
+const cors = require("cors");
+
+app.use(cors());
 
 let persons = [
   {
@@ -55,6 +58,20 @@ app.get("/api/persons/:id", (request, response) => {
     response.status(404).end();
   }
 });
+// //Not working correctly
+// app.put("/api/persons/:id", (request, response) => {
+//   const id = Number(request.params.id);
+
+//   const updatedPerson = {
+//     name: request.body.name,
+//     number: request.body.number,
+//     id: id,
+//   };
+//   console.log(updatedPerson);
+//   persons[id] = updatedPerson;
+//   response.json(updatedPerson);
+//   //  response.status(204).end();
+// });
 app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
   persons = persons.filter((person) => person.id !== id);
@@ -73,7 +90,7 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
